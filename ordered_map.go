@@ -1,6 +1,7 @@
 package ordered_map
 
 import (
+	"encoding/json"
 	"math"
 	"sort"
 	"sync"
@@ -11,10 +12,20 @@ type orderedStringMapEntry struct {
 	index uint64
 }
 
+func (osm *orderedStringMapEntry) MarshalJSON() ([]byte, error) {
+	jb, err := json.Marshal(osm.value)
+	return jb, err
+}
+
 type OrderedStringMap struct {
 	data      map[string]*orderedStringMapEntry
 	lastIndex uint64
 	lock      sync.RWMutex
+}
+
+func (o *OrderedStringMap) MarshalJSON() ([]byte, error) {
+	jb, err := json.Marshal(o.data)
+	return jb, err
 }
 
 func (o *OrderedStringMap) Reindex() {
